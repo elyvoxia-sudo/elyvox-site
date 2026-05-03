@@ -79,7 +79,67 @@ const translations = {
     "faq.a1": "Yes, if it collects personal information in Quebec, even with a contact form or newsletter.",
     "faq.q2": "Is Elyvox.IA a law firm?",
     "faq.a2": "No. Elyvox.IA is a technical automation service. For final legal advice, consult a lawyer.",
-    "faq.q3": "Does it work with my current site?",
+    "faq.q3": "Does it work with my current site?",/* ═══════════════════════════════════════════
+   PATCH LOI 25 — À ajouter à la fin de styles.css
+   ═══════════════════════════════════════════ */
+
+/* ─── Case à cocher consentement ─── */
+.consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: #F0FDF4;
+  border: 1.5px solid #22C55E;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.consent-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: #0f3460;
+  cursor: pointer;
+}
+.consent-label span {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #166534;
+}
+.consent-label span a {
+  color: #0f3460;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.consent-label:has(input:checked) {
+  background: #DCFCE7;
+  border-color: #16A34A;
+}
+
+/* ─── Footer légal ─── */
+.footer-legal {
+  padding-top: 16px;
+  padding-bottom: 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 8px;
+}
+.footer-legal p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+.footer-legal a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-legal a:hover {
+  color: #ffffff;
+}
+
     "faq.a3": "Yes. The solution can be installed on common platforms and custom HTML sites.",
     "faq.q4": "Can I cancel maintenance?",
     "faq.a4": "Yes, with 30 days notice. Maintenance keeps your system updated and reduces missed tasks.",

@@ -149,6 +149,13 @@
           <label><span data-i18n="form.phone">Téléphone</span><input name="phone" autocomplete="tel" /></label>
           <label class="full"><span data-i18n="form.message">Besoin principal</span><textarea name="message" rows="4"></textarea></label>
           <input type="hidden" name="plan" value="" />
+
+          <!-- FIX LOI 25 #1 — Consentement explicite obligatoire -->
+          <label class="full consent-label">
+            <input type="checkbox" name="consent" required />
+            <span data-i18n="form.consent">J'accepte qu'Elyvox.IA utilise mes renseignements personnels pour me contacter concernant mes besoins en conformité Loi 25, conformément à notre <a href="/politique-confidentialite.html" target="_blank">politique de confidentialité</a>. Je peux retirer mon consentement à tout moment.</span>
+          </label>
+
           <button class="button primary full" type="submit" data-i18n="form.submit">Envoyer la demande</button>
           <p class="legal-note" data-i18n="contact.legal">Elyvox.IA n'offre pas de conseils juridiques. Consultez un avocat pour validation finale.</p>
         </form>
@@ -156,7 +163,22 @@
     </section>
   </main>
 
-  <footer class="site-footer"><div class="section-inner footer-row"><strong>Elyvox<span>.IA</span></strong><p data-i18n="footer.rights">© 2026 Elyvox.IA. Tous droits réservés.</p></div></footer>
+  <footer class="site-footer">
+    <div class="section-inner footer-row">
+      <strong>Elyvox<span>.IA</span></strong>
+      <p data-i18n="footer.rights">© 2026 Elyvox.IA. Tous droits réservés.</p>
+    </div>
+    <!-- FIX LOI 25 #2 — RPRP + politique de confidentialité obligatoires -->
+    <div class="section-inner footer-legal">
+      <p>
+        <a href="/politique-confidentialite.html" data-i18n="footer.policy">Politique de confidentialité</a>
+        &nbsp;·&nbsp;
+        <span data-i18n="footer.rprp">Responsable de la protection des renseignements personnels (RPRP) :&nbsp;</span>
+        <a href="mailto:elyvox.ia@gmail.com">elyvox.ia@gmail.com</a>
+      </p>
+      <p data-i18n="footer.disclaimer">Elyvox.IA n'est pas un cabinet d'avocats et ne fournit pas de conseils juridiques. Les services offerts sont de nature technique. Pour tout avis juridique, consultez un avocat spécialisé en droit de la vie privée.</p>
+    </div>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
