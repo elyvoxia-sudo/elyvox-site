@@ -79,73 +79,13 @@ const translations = {
     "faq.a1": "Yes, if it collects personal information in Quebec, even with a contact form or newsletter.",
     "faq.q2": "Is Elyvox.IA a law firm?",
     "faq.a2": "No. Elyvox.IA is a technical automation service. For final legal advice, consult a lawyer.",
-    "faq.q3": "Does it work with my current site?",/* ═══════════════════════════════════════════
-   PATCH LOI 25 — À ajouter à la fin de styles.css
-   ═══════════════════════════════════════════ */
-
-/* ─── Case à cocher consentement ─── */
-.consent-label {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 16px;
-  background: #F0FDF4;
-  border: 1.5px solid #22C55E;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-.consent-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  margin-top: 2px;
-  accent-color: #0f3460;
-  cursor: pointer;
-}
-.consent-label span {
-  font-size: 13px;
-  line-height: 1.6;
-  color: #166534;
-}
-.consent-label span a {
-  color: #0f3460;
-  font-weight: 600;
-  text-decoration: underline;
-}
-.consent-label:has(input:checked) {
-  background: #DCFCE7;
-  border-color: #16A34A;
-}
-
-/* ─── Footer légal ─── */
-.footer-legal {
-  padding-top: 16px;
-  padding-bottom: 24px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  margin-top: 8px;
-}
-.footer-legal p {
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  line-height: 1.6;
-  margin-bottom: 6px;
-}
-.footer-legal a {
-  color: rgba(255,255,255,0.6);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.footer-legal a:hover {
-  color: #ffffff;
-}
-
+    "faq.q3": "Does it work with my current site?",
     "faq.a3": "Yes. The solution can be installed on common platforms and custom HTML sites.",
     "faq.q4": "Can I cancel maintenance?",
     "faq.a4": "Yes, with 30 days notice. Maintenance keeps your system updated and reduces missed tasks.",
     "contact.eyebrow": "Free consultation",
     "contact.title": "We review your site and tell you what to install first.",
-    "contact.lead": "The form opens a pre-filled email. It is intentionally simple for launch; we will connect a real backend when Render and access are ready.",
+    "contact.lead": "Fill out the form and we will contact you within 24 business hours.",
     "contact.location": "Montreal, Quebec, Canada",
     "contact.legal": "Elyvox.IA does not provide legal advice. Consult a lawyer for final validation.",
     "form.name": "Full name",
@@ -154,10 +94,18 @@ const translations = {
     "form.phone": "Phone",
     "form.message": "Main need",
     "form.submit": "Send request",
+    "form.consent": "I agree that Elyvox.IA may use my personal information to contact me regarding Law 25 compliance needs, in accordance with our privacy policy. I can withdraw my consent at any time.",
+    "form.sending": "Sending...",
+    "form.success": "Request sent! We will contact you within 24 hours.",
+    "form.error": "An error occurred. Please try again or email us directly.",
     "footer.rights": "© 2026 Elyvox.IA. All rights reserved."
   }
 };
 
+// ─── CONFIG N8N ───
+const N8N_WEBHOOK_URL = 'https://elyvox.app.n8n.cloud/webhook/lead-contact';
+
+// ─── ELEMENTS ───
 const header = document.querySelector("[data-header]");
 const nav = document.querySelector("[data-nav]");
 const menuToggle = document.querySelector("[data-menu-toggle]");
@@ -170,20 +118,28 @@ document.querySelectorAll("[data-i18n]").forEach((node) => {
   originalText.set(node, node.textContent);
 });
 
+// ─── LANGUE ───
 function setLanguage(lang) {
   document.documentElement.lang = lang;
   localStorage.setItem("elyvox-lang", lang);
-  langButtons.forEach((button) => button.classList.toggle("is-active", button.dataset.langButton === lang));
+  langButtons.forEach((button) =>
+    button.classList.toggle("is-active", button.dataset.langButton === lang)
+  );
   document.querySelectorAll("[data-i18n]").forEach((node) => {
     const key = node.dataset.i18n;
-    node.textContent = lang === "en" && translations.en[key] ? translations.en[key] : originalText.get(node);
+    node.textContent =
+      lang === "en" && translations.en[key]
+        ? translations.en[key]
+        : originalText.get(node);
   });
 }
 
+// ─── SCROLL ───
 window.addEventListener("scroll", () => {
   header.classList.toggle("is-scrolled", window.scrollY > 8);
 });
 
+// ─── MENU MOBILE ───
 menuToggle.addEventListener("click", () => {
   const isOpen = nav.classList.toggle("is-open");
   document.body.classList.toggle("menu-open", isOpen);
@@ -198,33 +154,100 @@ nav.addEventListener("click", (event) => {
   }
 });
 
+// ─── LANGUE BUTTONS ───
 langButtons.forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.langButton));
 });
 
+// ─── FORFAIT LINKS ───
 planLinks.forEach((link) => {
   link.addEventListener("click", () => {
     if (form?.elements.plan) form.elements.plan.value = link.dataset.plan;
   });
 });
 
-form.addEventListener("submit", (event) => {
+// ─── FORMULAIRE → N8N ───
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const data = new FormData(form);
-  const subject = encodeURIComponent(`Consultation Elyvox.IA - ${data.get("company") || data.get("name")}`);
-  const body = encodeURIComponent([
-    `Nom: ${data.get("name")}`,
-    `Courriel: ${data.get("email")}`,
-    `Téléphone: ${data.get("phone") || ""}`,
-    `Entreprise: ${data.get("company") || ""}`,
-    `Forfait: ${data.get("plan") || "Non précisé"}`,
-    "",
-    "Besoin:",
-    data.get("message") || ""
-  ].join("\n"));
 
-  window.location.href = `mailto:elyvox.ia@gmail.com?subject=${subject}&body=${body}`;
-  form.querySelector('button[type="submit"]').textContent = document.documentElement.lang === "en" ? "Email prepared" : "Courriel préparé";
+  const lang = document.documentElement.lang;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const data = new FormData(form);
+
+  // Vérifier le consentement
+  if (!data.get("consent")) {
+    alert(lang === "en"
+      ? "Please accept the consent checkbox to continue."
+      : "Veuillez cocher la case de consentement pour continuer."
+    );
+    return;
+  }
+
+  // État de chargement
+  submitBtn.disabled = true;
+  submitBtn.textContent = lang === "en" ? "Sending..." : "Envoi en cours...";
+
+  const payload = {
+    name: data.get("name") || "",
+    email: data.get("email") || "",
+    company: data.get("company") || "",
+    phone: data.get("phone") || "",
+    message: data.get("message") || "",
+    plan: data.get("plan") || "Non précisé",
+    consent: true,
+    lang: lang
+  };
+
+  try {
+    const response = await fetch(N8N_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      // Succès
+      form.innerHTML = `
+        <div style="text-align:center; padding: 40px 20px;">
+          <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #0f3460; margin-bottom: 8px;">
+            ${lang === "en" ? "Request received!" : "Demande reçue !"}
+          </h3>
+          <p style="font-size: 15px; color: #555; line-height: 1.6;">
+            ${lang === "en"
+              ? `Thank you ${payload.name}. We will contact you within 24 business hours.`
+              : `Merci ${payload.name}. Nous vous contacterons dans les 24 heures ouvrables.`
+            }
+          </p>
+        </div>
+      `;
+    } else {
+      throw new Error("Response not OK");
+    }
+  } catch (error) {
+    // Fallback mailto si N8N échoue
+    submitBtn.disabled = false;
+    submitBtn.textContent = lang === "en" ? "Send request" : "Envoyer la demande";
+
+    const subject = encodeURIComponent(`Consultation Elyvox.IA - ${payload.company || payload.name}`);
+    const body = encodeURIComponent([
+      `Nom: ${payload.name}`,
+      `Courriel: ${payload.email}`,
+      `Téléphone: ${payload.phone}`,
+      `Entreprise: ${payload.company}`,
+      `Forfait: ${payload.plan}`,
+      "",
+      "Besoin:",
+      payload.message
+    ].join("\n"));
+
+    alert(lang === "en"
+      ? "Connection error. Opening your email client as backup."
+      : "Erreur de connexion. Ouverture de votre client email en backup."
+    );
+    window.location.href = `mailto:elyvox.ia@gmail.com?subject=${subject}&body=${body}`;
+  }
 });
 
+// ─── INIT ───
 setLanguage(localStorage.getItem("elyvox-lang") || "fr");
