@@ -472,8 +472,10 @@ var COULEUR_ACCENT = '#0f3460';
   window.evCloseForm = function () {
     document.getElementById('ev-form-overlay').classList.remove('ev-open');
     document.getElementById('ev-form').classList.remove('ev-open');
-    var b = document.getElementById('elyvox-banner');
-    if (b) b.classList.add('ev-visible');
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      var b = document.getElementById('elyvox-banner');
+      if (b) b.classList.add('ev-visible');
+    }
   };
 
   window.evDecline = function () {
