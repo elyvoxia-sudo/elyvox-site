@@ -104,12 +104,12 @@ const translations = {
   }
 };
 
-// Webhook URLs — N8N VPS
+// Webhook URLs — N8N VPS HTTPS
 const WEBHOOKS = {
-  leadFormulaire: "http://177.7.44.50:5678/webhook/leads-formulaire-contact",
-  consentement:   "http://177.7.44.50:5678/webhook/consentement-loi25",
-  demandeAcces:   "http://177.7.44.50:5678/webhook/demande-acces-loi25",
-  incident:       "http://177.7.44.50:5678/webhook/incident-loi25"
+  leadFormulaire: "https://elyvox.tech/webhook/leads-formulaire-contact",
+  consentement:   "https://elyvox.tech/webhook/consentement-loi25",
+  demandeAcces:   "https://elyvox.tech/webhook/demande-acces-loi25",
+  incident:       "https://elyvox.tech/webhook/incident-loi25"
 };
 
 const header = document.querySelector("[data-header]");
