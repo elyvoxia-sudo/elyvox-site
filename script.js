@@ -207,4 +207,4 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
-setLanguage(localStorage.getItem("elyvox-lang") || "fr");
+setLanguage(localStorage.getItem("elyvox-lang") || "fr"); 
