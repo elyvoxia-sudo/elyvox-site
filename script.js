@@ -106,7 +106,7 @@ const translations = {
 
 // Webhook URLs — N8N VPS HTTPS
 const WEBHOOKS = {
-  leadFormulaire: "https://elyvox.tech/webhook/leads-formulaire-contact",
+  leadFormulaire: "https://elyvox.tech/webhook/lead-contact",
   consentement:   "https://elyvox.tech/webhook/consentement-loi25",
   demandeAcces:   "https://elyvox.tech/webhook/demande-acces-loi25",
   incident:       "https://elyvox.tech/webhook/incident-loi25"
