@@ -172,8 +172,8 @@ form.addEventListener("submit", async (event) => {
 
   const data = new FormData(form);
   const payload = {
-    nom: data.get("name"),
-    courriel: data.get("email"),
+    name: data.get("name"),
+    email: data.get("email"),
     telephone: data.get("phone") || "",
     entreprise: data.get("company") || "",
     forfait: data.get("plan") || "Non précisé",
@@ -207,4 +207,4 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
-setLanguage(localStorage.getItem("elyvox-lang") || "fr");  
+setLanguage(localStorage.getItem("elyvox-lang") || "fr");
